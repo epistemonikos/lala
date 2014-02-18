@@ -10,6 +10,7 @@ gem 'mongoid', :github=>"mongoid/mongoid"
 gem 'puma'
 gem 'slim-rails'
 group :development do
+  gem 'negroku'
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
   gem 'guard-bundler'
