@@ -190,32 +190,36 @@ end
 # Number of workers (Rule of thumb is 2 per CPU)
 # Just be aware that every worker needs to cache all classes and thus eat some
 # of your RAM.
-set :unicorn_workers, 1
+# set :unicorn_workers, 1
 
 # Workers timeout in the amount of seconds below, when the master kills it and
 # forks another one.
-set  :unicorn_workers_timeout, 30
+# set  :unicorn_workers_timeout, 30
 
 # Workers are started with this user
 # By default we get the user/group set in capistrano.
-set  :unicorn_user, nil
+# set  :unicorn_user, nil
 
 # The wrapped bin to start unicorn
-set  :unicorn_bin, 'bin/unicorn'
-set  :unicorn_socket, fetch(:app_server_socket)
+# set  :unicorn_bin, 'bin/unicorn'
+# set  :unicorn_socket, fetch(:app_server_socket)
 
 # Defines where the unicorn pid will live.
-set :unicorn_pid, File.join(current_path, "tmp", "pids", "unicorn.pid")
+# set :unicorn_pid, File.join(current_path, "tmp", "pids", "unicorn.pid")
 
 # Preload app for fast worker spawn
-set :unicorn_preload, true
+# set :unicorn_preload, true
 
 # set :unicorn_config_path, "#{shared_path}/config" 
+
+
 
 # Unicorn
 #------------------------------------------------------------------------------
 # # Load unicorn tasks
-# require 'capistrano/puma'
+
+set :linked_dirs, %w{bin log tmp/pids}
+
 require 'capistrano3-unicorn'
 
 #namespace :unicorn do
