@@ -210,7 +210,7 @@ set :unicorn_pid, File.join(current_path, "tmp", "pids", "unicorn.pid")
 # Preload app for fast worker spawn
 set :unicorn_preload, true
 
-set :unicorn_config_path, "#{shared_path}/config" 
+# set :unicorn_config_path, "#{shared_path}/config" 
 
 # Unicorn
 #------------------------------------------------------------------------------
