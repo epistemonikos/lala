@@ -2,7 +2,7 @@
 lock '3.1.0'
 
 set :application, 'lala'
-set :repo_url, 'git@github.com:dperezrada/lala.git'
+set :repo_url, 'git@github.com:epistemonikos/lala.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }

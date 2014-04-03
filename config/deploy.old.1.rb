@@ -10,7 +10,7 @@ set :deploy_to,   "/home/#{user}/applications/#{application}"
 
 # Repository (if any) configuration.
 set :deploy_via, :remote_cache
-set :repository, "git@github.com:dperezrada/lala.git"
+set :repository, "git@github.com:epistemonikos/lala.git"
 # set :git_enable_submodules, 1
 
 # Database
