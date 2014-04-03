@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.0.0'
+
 gem 'rails', '4.0.2'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
@@ -13,5 +13,6 @@ group :development do
   gem "capistrano"
   gem 'capistrano-bundler'
   gem 'capistrano-rbenv'
-  gem 'capistrano-puma'
+  gem 'capistrano3-nginx'
+  gem 'capistrano3-unicorn'
 end

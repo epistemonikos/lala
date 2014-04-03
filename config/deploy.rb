@@ -34,8 +34,8 @@ set :pty, true
 # Default value for keep_releases is 5
 set :keep_releases, 3
 
-set :rbenv_type, :user
-set :rbenv_ruby, '2.0.0-p247'
+#set :rbenv_type, :user
+set :rbenv_ruby, '2.1.0'
 
 namespace :deploy do
 
@@ -61,6 +61,13 @@ namespace :deploy do
 end
 
 namespace :new_server do
+  desc "Create deploy user"
+  task :create_deploy_user do
+    on roles(:sudo) do
+      sudo "adduser --disabled-password --system --group --shell /bin/bash --home /home/deploy deploy"
+    end
+  end
+
   desc "Update apt-get sources"
   task :update_apt_get do
     on roles(:sudo) do
@@ -114,8 +121,8 @@ namespace :new_server do
   task :install_ruby do
     on roles(:web) do
       execute "echo $PATH"
-      execute "/home/ubuntu/.rbenv/bin/rbenv install 2.0.0-p247 -v"
-      execute "/home/ubuntu/.rbenv/bin/rbenv global 2.0.0-p247"
+      execute "/home/ubuntu/.rbenv/bin/rbenv install 2.1.0 -v"
+      execute "/home/ubuntu/.rbenv/bin/rbenv global 2.1.0"
     end
   end
 
@@ -130,7 +137,7 @@ namespace :new_server do
   task :install_nginx do
     on roles(:sudo) do 
       sudo "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62"
-      sudo "echo 'echo \"deb http://nginx.org/packages/ubuntu/ precise nginx\" >> /etc/apt/sources.list' | sh"
+      sudo "echo 'echo \"deb http://nginx.org/packages/ubuntu/ precise nginx\" | sudo tee -a /etc/apt/sources.list' | sh"
       sudo "apt-get update"
       sudo "apt-get install nginx -y"
     end
@@ -141,31 +148,29 @@ namespace :new_server do
     on roles(:sudo) do 
       sudo "mkdir -p /var/www/"
       sudo "chown ubuntu:ubuntu /var/www/"
-
     end
   end
 
   desc "Install requirements for a brand new server"
   task :install_all do
-    # on roles(:sudo) do
-    # invoke 'new_server:update_apt_get'
-    # invoke 'new_server:install_needed_tools'
-    # invoke 'new_server:install_git'
-    # invoke 'new_server:install_sqlite3'
-    # invoke 'new_server:install_node'
-    # invoke 'new_server:install_rbenv'
+    invoke 'new_server:create_deploy_user'
+    invoke 'new_server:update_apt_get'
+    invoke 'new_server:install_needed_tools'
+    invoke 'new_server:install_sqlite3'
+    invoke 'new_server:install_node'
+    invoke 'new_server:install_rbenv'
     invoke 'new_server:install_nginx'
-    # invoke 'new_server:install_ruby'
-    # invoke 'new_server:install_rails_dependecies'
-    # invoke 'new_server:prepare_folders'
-    # end
-    # invoke 'new_server:update_apt_get'
+    invoke 'new_server:install_ruby'
+    invoke 'new_server:install_rails_dependecies'
+    invoke 'new_server:prepare_folders'
   end
 end
 
 namespace :nginx do
+
   # after "deploy:install", "nginx:install"
   # desc "Install latest stable release of nginx."
+  
   # task :install, roles: :web do
   
   # end
@@ -173,7 +178,7 @@ namespace :nginx do
   %w[start stop restart reload].each do |command|
     desc "#{command} Nginx."
     task command do
-      on roles: :sudo do
+      on roles(:sudo) do
         sudo "service nginx #{command}"
       end
     end
@@ -210,16 +215,21 @@ set :unicorn_config_path, "#{shared_path}/config"
 # Unicorn
 #------------------------------------------------------------------------------
 # # Load unicorn tasks
-require 'capistrano/puma'
+# require 'capistrano/puma'
+require 'capistrano3-unicorn'
 
-# namespace :unicorn do
-#   after "deploy:setup", "unicorn:setup"
-#   desc "Setup unicorn configuration for this application."
-#    task :setup, roles: :app do
-#     template "unicorn.erb", "/tmp/unicorn.rb"
-#     run "mv /tmp/unicorn.rb #{shared_path}/config/"
-#   end
+#namespace :unicorn do
+   #after "deploy:setup", "unicorn:setup"
 
-#   after "deploy:cold", "unicorn:start"
-#   after 'deploy:restart', 'unicorn:restart'
-# end
+ #  desc "Setup unicorn configuration for this application."
+ #  task :setup do
+ #    on roles(:app) do
+ #      template "unicorn.erb", "/tmp/unicorn.rb"
+ #      run "mv /tmp/unicorn.rb #{shared_path}/config/"
+ #    end
+ #  end
+
+   
+    #after "deploy:cold", "unicorn:start"
+   #after 'deploy:restart', 'unicorn:restart'
+#end
